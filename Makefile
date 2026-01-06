@@ -10,3 +10,6 @@ install :; forge install cyfrin/foundry-devops@0.2.2 && forge install smartcontr
 
 deploy-sepolia:
 	@forge script script/DeployRaffle.s.sol:DeployRaffle --rpc-url $(SEPOLIA_RPC_URL) --account defaultQuettaAddress --broadcast --verify --etherscan-api-key $(ETHERSCAN_API_KEY) -vvvv
+
+deploy-anvil:
+	@forge script script/DeployRaffle.s.sol:DeployRaffle --rpc-url $(ANVIL_RPC_URL) --private-key $(ANVIL_PRIVATE_KEY) --broadcast -vvvv
