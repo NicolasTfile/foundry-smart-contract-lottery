@@ -11,6 +11,4 @@ pragma solidity ^0.8.19;
 // stateless fuzz
 // formal verification
 
-contract Interactions {
-
-}
+contract Interactions {}
