@@ -13,3 +13,6 @@ deploy-sepolia:
 
 deploy-anvil:
 	@forge script script/DeployRaffle.s.sol:DeployRaffle --rpc-url $(ANVIL_RPC_URL) --private-key $(ANVIL_PRIVATE_KEY) --broadcast -vvvv
+
+deploy-challenge:
+	@forge script script/LessonNineSolver.s.sol:LessonNineSolver --rpc-url $(SEPOLIA_RPC_URL) --account defaultQuettaAddress --broadcast --verify --etherscan-api-key $(ETHERSCAN_API_KEY) -vvvv
