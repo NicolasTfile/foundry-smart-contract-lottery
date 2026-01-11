@@ -3,7 +3,7 @@
 
 pragma solidity ^0.8.0;
 
-import "src/foundrycoursechallenge/Context.sol";
+import {Context} from "src/foundrycoursechallenge/Context.sol";
 
 /**
  * @dev Contract module which provides a basic access control mechanism, where
