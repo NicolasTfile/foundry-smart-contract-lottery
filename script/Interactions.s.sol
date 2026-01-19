@@ -65,7 +65,7 @@ contract FundSubscription is Script, CodeConstants {
             vm.startBroadcast();
             VRFCoordinatorV2_5Mock(vrfCoordinator).fundSubscription(
                 subscriptionId,
-                FUND_AMOUNT * 100
+                FUND_AMOUNT * 100 // Mocks need more funds
             );
             vm.stopBroadcast();
         } else {
