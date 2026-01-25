@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import {Test, console} from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 import {DeployRaffle} from "script/DeployRaffle.s.sol";
 import {Raffle} from "src/Raffle.sol";
 import {HelperConfig} from "script/HelperConfig.s.sol";
@@ -298,10 +298,12 @@ contract RaffleTest is CodeConstants, Test {
         ) {
             // forge-lint: disable-next-line(unsafe-typecast)
             address newPlayer = address(uint160(i)); // casting to 'uint160' is safe because it is a cheatcode for converting numbers to an address
-            hoax(newPlayer, 1 ether); // Cheat that sets up a prank AND also gives ether
+            hoax(newPlayer, STARTING_PLAYER_BALANCE); // Cheat that sets up a prank AND also gives ether
             raffle.enterRaffle{value: entranceFee}();
         }
-        uint256 startingTimeStamp = raffle.getLastTimeStamp();
+
+        uint256 totalplayers = additionalEntrants + 1;
+        uint256 prize = entranceFee * totalplayers;
         // uint256 winnerStartingBalance = expectedWinner.balance;
 
         // Act
@@ -309,6 +311,9 @@ contract RaffleTest is CodeConstants, Test {
         raffle.performUpkeep("");
         Vm.Log[] memory entries = vm.getRecordedLogs();
         bytes32 requestId = entries[1].topics[1];
+
+        uint256 startingTimeStamp = raffle.getLastTimeStamp();
+
         VRFCoordinatorV2_5Mock(vrfCoordinator).fulfillRandomWords(
             uint256(requestId),
             address(raffle)
@@ -319,16 +324,24 @@ contract RaffleTest is CodeConstants, Test {
         Raffle.RaffleState raffleState = raffle.getRaffleState();
         uint256 winnerBalance = recentWinner.balance;
         uint256 endingTimeStamp = raffle.getLastTimeStamp();
-        uint256 prize = entranceFee * (additionalEntrants + 1);
 
-        assert(recentWinner != address(0));
-        assertEq(uint256(raffleState), uint256(Raffle.RaffleState.OPEN));
-        console.log("Winner balance is ", winnerBalance);
-        console.log(
-            "Expected balance is ",
-            STARTING_PLAYER_BALANCE + prize - entranceFee
+        // The winner's ending balance should be:
+        // - Their starting balance (10 ether)
+        // - Minus entrance fee they paid
+        // - Plus the full prize pool
+        uint256 expectedBalance = STARTING_PLAYER_BALANCE - entranceFee + prize;
+
+        assertNotEq(
+            recentWinner,
+            address(0),
+            "Winner should not be address(0)"
         );
-        assert(winnerBalance == STARTING_PLAYER_BALANCE + prize - entranceFee);
-        assert(endingTimeStamp > startingTimeStamp);
+        assertEq(uint256(raffleState), 0, "Raffle state should be OPEN");
+        assertEq(winnerBalance, expectedBalance, "Winner balance incorrect");
+        assertGt(
+            endingTimeStamp,
+            startingTimeStamp,
+            "Timestamp should have updated"
+        );
     }
 }
