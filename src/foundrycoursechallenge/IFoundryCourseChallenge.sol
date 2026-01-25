@@ -4,9 +4,7 @@ pragma solidity ^0.8.18;
 interface IFoundryCourseChallenge {
     function description() external view returns (string memory);
 
-    function extraDescription(
-        address user
-    ) external view returns (string memory);
+    function extraDescription(address user) external view returns (string memory);
 
     function specialImage() external view returns (string memory);
 

@@ -11,15 +11,8 @@ contract Solver {
     }
 
     function solve(string memory twitterHandle) external {
-        uint256 correctAnswer = uint256(
-            keccak256(
-                abi.encodePacked(
-                    address(this),
-                    block.prevrandao,
-                    block.timestamp
-                )
-            )
-        ) % 100000;
+        uint256 correctAnswer =
+            uint256(keccak256(abi.encodePacked(address(this), block.prevrandao, block.timestamp))) % 100000;
 
         i_challenge.solveChallenge(correctAnswer, twitterHandle);
     }

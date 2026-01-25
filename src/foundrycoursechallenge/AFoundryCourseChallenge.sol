@@ -23,18 +23,18 @@ abstract contract AFoundryCourseChallenge is IFoundryCourseChallenge, Ownable {
      * @param twitterHandleOfSolver - The twitter handle of the solver.
      * It can be left blank.
      */
-    function _updateAndRewardSolver(
-        string memory twitterHandleOfSolver
-    ) internal {
-        IFoundryCourseNft(i_foundryCourseNft).mintNft(
-            msg.sender,
-            twitterHandleOfSolver
-        );
+    function _updateAndRewardSolver(string memory twitterHandleOfSolver) internal {
+        IFoundryCourseNft(i_foundryCourseNft).mintNft(msg.sender, twitterHandleOfSolver);
     }
 
     function extraDescription(
         address /* user */
-    ) external view virtual returns (string memory) {
+    )
+        external
+        view
+        virtual
+        returns (string memory)
+    {
         return BLANK_SPECIAL_DESCRIPTION;
     }
 }
